@@ -18,6 +18,10 @@ from django.urls import path, include
 from carrental import views
 
 urlpatterns = [
+    path('index/', include('carrental.urls'))
     path('admin/', admin.site.urls),
-    path('cars/', include('carrental.urls'))
 ]
+
+
+
+#https://docs.djangoproject.com/en/4.1/intro/tutorial01/

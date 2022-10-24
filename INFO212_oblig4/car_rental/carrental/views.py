@@ -3,11 +3,13 @@ from django.http import HttpResponse
 from carrental.models import Car
 
 def index(request):
-    car = Car.objects.all().order_by('car_model')
+    return HttpResponse("Under construction. Come back tomorrow for cars")
+
+""" car = Car.objects.all().order_by('car_model')
     context = {
         'cars': car
     }
-    return render(request, 'index.html', context)
+    return render(request, 'index.html', context)"""
 
 
 """# Create your views here.

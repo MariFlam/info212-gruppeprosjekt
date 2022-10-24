@@ -9,7 +9,13 @@
 
 <body>
     <h1>You want cars?</h1><br />
-    <h2>We have cars!</h2>
+    <h2>We have cars!</h2> <br />
+    <h3>Available cars</h3>
+    <ul>
+        {%for car in cars%}
+        <li>car.car_model</li>
+        {%endfor%}
+    </ul>
 </body>
 
 </html>
