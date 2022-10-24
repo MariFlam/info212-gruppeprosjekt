@@ -2,12 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from carrental.models import Car
 
-def cars(request):
-    car = Car.objects.all().order_by('title')
+def index(request):
+    car = Car.objects.all().order_by('car_model')
     context = {
         'cars': car
     }
-    return render(request, 'car_list.html', context)
+    return render(request, 'index.html', context)
 
 
 """# Create your views here.

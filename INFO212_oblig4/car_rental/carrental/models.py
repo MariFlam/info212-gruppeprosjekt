@@ -29,7 +29,7 @@ class Customer(models.Model):
 
 
 
-class Customer(models.Model):
+class Employee(models.Model):
     emp_name = models.CharField(max_length=256)
     emp_address = models.CharField(max_length=50)
     emp_branch = models.CharField(max_length = 50)
