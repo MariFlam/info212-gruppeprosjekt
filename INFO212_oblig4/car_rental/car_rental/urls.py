@@ -15,12 +15,30 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from carrental import views
+import carrental.views as view
 
 urlpatterns = [
-    path('index/', include('carrental.urls'))
-    path('admin/', admin.site.urls),
-]
+    # car paths
+    #if we want a prettier front-page
+    #path('', view.index, name = 'main'),
+    path('admin/', admin.site.urls, name = 'admin'),
+    path('get_cars/', view.get_cars, name = 'Get all the cars'),
+    path('save_car/', view.save_car, name = 'Add a new car'),
+    path('update_car/<int:vin>', view.update_car, name = 'Change existing car'),
+    path('delete_car/<int:vin>', view.delete_car, name = 'Delete Car'),
+    #customer paths
+    path('get_customers/', view.get_customers, name = 'Get all the customers'),
+    path('save_customer/', view.save_customer, name = 'Add a new customer'),
+    path('update_customer/<int:id>', view.update_customer, name = 'Change existing customer'),
+    path('delete_customer/<int:id>', view.delete_customer, name = 'Delete Customer'),
+    # employee paths
+    path('get_employees/', view.get_employees, name = 'Get all the employees'),
+    path('save_employee/', view.save_employee, name = 'Add a new employee'),
+    path('update_employee/<int:id>', view.update_employee, name = 'Change existing employee'),
+    path('delete_employee/<int:id>', view.delete_employee, name = 'Delete employee'),
+    #Book, Rent, Delete Booking, Return car paths
+
+    ]
 
 
 
