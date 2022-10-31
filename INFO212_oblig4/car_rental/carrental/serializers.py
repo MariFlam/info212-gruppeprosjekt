@@ -21,7 +21,7 @@ class CustomerSerializer(serializers.ModelSerializer):
            'cus_address',
            'cus_age',
            'booked_car',
-           'has_rented'
+           'rented_car'
         ]
 
 class EmployeeSerializer(serializers.ModelSerializer):

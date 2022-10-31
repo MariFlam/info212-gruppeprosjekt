@@ -13,7 +13,7 @@ class Car(models.Model):
 
     # Overrides the default string method to print the detials of the car
     def __str__(self):
-        car_string = f"{self.car_vin} {self.car_make} {self.car_model} {self.car_year} {self.car_location} rented: {self.car_rented}"
+        car_string = f"{self.car_vin} {self.car_make} {self.car_model} {self.car_year} {self.car_location} rented: {self.car_status}"
         return car_string
 
 

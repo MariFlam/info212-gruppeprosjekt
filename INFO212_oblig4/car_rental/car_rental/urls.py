@@ -37,6 +37,7 @@ urlpatterns = [
     path('update_employee/<int:id>', view.update_employee, name = 'Change existing employee'),
     path('delete_employee/<int:id>', view.delete_employee, name = 'Delete employee'),
     #Book, Rent, Delete Booking, Return car paths
+    path('order_car/<int:id>/<int:vin>', view.order_car, name= 'Order car'),
 
     ]
 

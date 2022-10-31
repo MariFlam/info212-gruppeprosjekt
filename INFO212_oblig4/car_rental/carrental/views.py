@@ -132,7 +132,7 @@ def save_customer(request):
 @api_view(['PUT'])
 def update_customer(request, id):
     try:
-        theCustomer = Customer.objects.get(emp_id = id)
+        theCustomer = Customer.objects.get(cus_id = id)
     except Customer.DoesNotExists:
         return Response(status = status.HTTP_404_NOT_FOUND)
     serializer = CustomerSerializer(theCustomer, data = request.data)
@@ -147,7 +147,7 @@ def update_customer(request, id):
 @api_view(['DELETE'])
 def delete_customer(request, id):
     try:
-        theCustomer = Car.objects.get(cus_id = id)
+        theCustomer = Customer.objects.get(cus_id = id)
     except Customer.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
     theCustomer.delete()
@@ -170,3 +170,25 @@ def delete_customer(request, id):
 
 
 #https://www.geeksforgeeks.org/django-rest-api-crud-with-drf/
+
+@api_view(['PUT'])
+def order_car(request, id, vin):
+    try:
+        theCustomer = Customer.objects.get(cus_id = id)
+        theCar = Car.objects.get(car_vin = vin)
+    except Customer.DoesNotExist or Car.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+
+    if theCustomer.booked_car == 0:
+        theCustomer.booked_car = vin
+        theCar.car_status = "booked"
+
+    serializer = CustomerSerializer(theCustomer, data = request.data)
+    car_serializer = CarSerializer(theCar, data = request.data)
+    if serializer.is_valid() and car_serializer.is_valid():
+        serializer.save()
+        car_serializer.save()
+        return Response(serializer.data, car_serializer.data)
+    else:
+        return Response(status = status.HTTP_400_BAD_REQUEST)
+
