@@ -10,7 +10,7 @@ class CarSerializer(serializers.ModelSerializer):
             'car_model', 
             'car_year', 
             'car_location', 
-            'car_rented']
+            'car_status']
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,7 +19,9 @@ class CustomerSerializer(serializers.ModelSerializer):
            'cus_id',
            'cus_name',
            'cus_address',
-           'cus_age'
+           'cus_age',
+           'booked_car',
+           'has_rented'
         ]
 
 class EmployeeSerializer(serializers.ModelSerializer):
