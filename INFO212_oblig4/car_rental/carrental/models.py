@@ -23,7 +23,7 @@ class Customer(models.Model):
     cus_address = models.CharField(max_length=50)
     cus_age = models.CharField(max_length=50)
     booked_car = models.IntegerField(default=0)
-    has_rented = models.BooleanField(default=False)
+    rented_car = models.IntegerField(default=0)
 
     def __str__(self):
         cus_string = f"{self.cus_name} {self.cus_age} {self.cus_address}"
