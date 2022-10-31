@@ -176,19 +176,18 @@ def order_car(request, id, vin):
     try:
         theCustomer = Customer.objects.get(cus_id = id)
         theCar = Car.objects.get(car_vin = vin)
-    except Customer.DoesNotExist or Car.DoesNotExist:
+    except Customer.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    except Car.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
 
-    if theCustomer.booked_car == 0:
+    if theCustomer.booked_car == 0 and theCar.car_status == 'available':
         theCustomer.booked_car = vin
         theCar.car_status = "booked"
 
-    serializer = CustomerSerializer(theCustomer, data = request.data)
-    car_serializer = CarSerializer(theCar, data = request.data)
-    if serializer.is_valid() and car_serializer.is_valid():
-        serializer.save()
-        car_serializer.save()
-        return Response(serializer.data, car_serializer.data)
-    else:
-        return Response(status = status.HTTP_400_BAD_REQUEST)
+        theCustomer.save()
+        theCar.save()
+        return Response(status = status.HTTP_200_OK)
+
+    return Response(status = status.HTTP_400_BAD_REQUEST)
 

@@ -13,7 +13,7 @@ class Car(models.Model):
 
     # Overrides the default string method to print the detials of the car
     def __str__(self):
-        car_string = f"{self.car_vin} {self.car_make} {self.car_model} {self.car_year} {self.car_location} rented: {self.car_status}"
+        car_string = f"{self.car_vin} {self.car_make} {self.car_model} {self.car_year} {self.car_location} {self.car_status}"
         return car_string
 
 
@@ -26,7 +26,7 @@ class Customer(models.Model):
     rented_car = models.IntegerField(default=0)
 
     def __str__(self):
-        cus_string = f"{self.cus_name} {self.cus_age} {self.cus_address}"
+        cus_string = f"{self.cus_id} {self.cus_name} {self.cus_age} {self.cus_address}"
         return cus_string
 
 

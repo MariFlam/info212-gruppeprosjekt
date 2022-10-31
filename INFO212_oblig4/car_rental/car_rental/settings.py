@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,7 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'carrental',
     'rest_framework',
+    'import_export'
 ]
+
+# added to be able to add json objects into the database: 
+# https://django-import-export.readthedocs.io/en/latest/
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

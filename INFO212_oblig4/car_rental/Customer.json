@@ -1,0 +1,98 @@
+[
+    {
+        "cus_id": 1,
+        "cus_name": "John Smith",
+        "cus_address": "871 Sigley Road",
+        "cus_age": 26,
+        "booked_car": 0,
+        "has_rented": 0
+    },
+    {
+        "cus_id": 2,
+        "cus_name": "Aneesa Wills",
+        "cus_address": "2392 Yorkie Lane",
+        "cus_age": 39,
+        "booked_car": 331,
+        "has_rented": 0
+    },
+    {
+        "cus_id": 3,
+        "cus_name": "Holly Dumas",
+        "cus_address": "3416 Seneca Drive",
+        "cus_age": 36,
+        "booked_car": 0,
+        "has_rented": 0
+    },
+    {
+        "cus_id": 4,
+        "cus_name": "Michael Smith",
+        "cus_address": "1504 Maxwell Street",
+        "cus_age": 80,
+        "booked_car": 0,
+        "has_rented": 332
+    },
+    {
+        "cus_id": 5,
+        "cus_name": "John Allison",
+        "cus_address": "4578 Glen Falls Road",
+        "cus_age": 59,
+        "booked_car": 333,
+        "has_rented": 0
+    },
+    {
+        "cus_id": 6,
+        "cus_name": "Patricia Johnson",
+        "cus_address": "Readstown, WI 54652",
+        "cus_age": 24,
+        "booked_car": 0,
+        "has_rented": 0
+    },
+    {
+        "cus_id": 7,
+        "cus_name": "Robert Silvers",
+        "cus_address": "3430 Limer Street",
+        "cus_age": 36,
+        "booked_car": 0,
+        "has_rented": 334
+    },
+    {
+        "cus_id": 8,
+        "cus_name": "Arlene Ladson",
+        "cus_address": "967 Newton Street",
+        "cus_age": 23,
+        "booked_car": 335,
+        "has_rented": 0
+    },
+    {
+        "cus_id": 9,
+        "cus_name": "Clark Lowe",
+        "cus_address": "2237 Aaron Smith Drive",
+        "cus_age": 73,
+        "booked_car": 0,
+        "has_rented": 0
+    },
+    {
+        "cus_id": 10,
+        "cus_name": "Dominique Cruickshank",
+        "cus_address": "1907 Carson Street",
+        "cus_age": 57,
+        "booked_car": 0,
+        "has_rented": 0
+    },
+    {
+        "cus_id": 11,
+        "cus_name": "Thomas Brooks",
+        "cus_address": "4516 Stout Street",
+        "cus_age": 28,
+        "booked_car": 0,
+        "has_rented": 336
+    },
+    {
+        "cus_id": 12,
+        "cus_name": "Kaye Mora",
+        "cus_address": "2645 Poplar Street",
+        "cus_age": 45,
+        "booked_car": 337,
+        "has_rented": 0
+    }
+]
