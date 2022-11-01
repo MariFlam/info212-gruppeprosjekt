@@ -191,3 +191,75 @@ def order_car(request, id, vin):
 
     return Response(status = status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['PUT'])
+def cancel_order_car(request, id, vin):
+    try:
+        theCustomer = Customer.objects.get(cus_id=id)
+        theCar = Car.objects.get(car_vin=vin)
+    except Customer.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Car.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if theCustomer.booked_car == 1 and theCar.car_status == "booked":
+        theCar.car_status = "available"
+        theCustomer.booked_car = 0
+
+    serializer = CustomerSerializer(theCustomer, data=request.data)
+    car_serializer = CarSerializer(theCar, data=request.data)
+    if serializer.is_valid() and car_serializer.is_valid():
+        serializer.save()
+        car_serializer.save()
+        return Response(serializer.data, car_serializer.data)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT'])
+def rent_car(request, id, vin):
+    try:
+        theCustomer = Customer.objects.get(cus_id=id)
+        theCar = Car.objects.get(car_vin=vin)
+    except Customer.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Car.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if theCustomer.booked_car == 1 and theCar.car_status == "booked":
+        theCar.car_status = "rented"
+        theCustomer.rented_car = 1
+        theCustomer.booked_car = 0
+
+    serializer = CustomerSerializer(theCustomer, data=request.data)
+    car_serializer = CarSerializer(theCar, data=request.data)
+    if serializer.is_valid() and car_serializer.is_valid():
+        serializer.save()
+        car_serializer.save()
+        return Response(serializer.data, car_serializer.data)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT'])
+def return_car(request, id, vin):
+    try:
+        theCustomer = Customer.objects.get(cus_id=id)
+        theCar = Car.objects.get(car_vin=vin)
+    except Customer.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Car.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if theCustomer.rented_car == 1 and theCostumer.car_status == "rented":
+        theCar.car_status = "available"
+        theCustomer.rented_car = 0
+
+    serializer = CustomerSerializer(theCustomer, data=request.data)
+    car_serializer = CarSerializer(theCar, data=request.data)
+    if serializer.is_valid() and car_serializer.is_valid():
+        serializer.save()
+        car_serializer.save()
+        return Response(serializer.data, car_serializer.data)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
