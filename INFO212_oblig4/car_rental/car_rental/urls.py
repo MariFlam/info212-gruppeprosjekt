@@ -29,7 +29,10 @@ urlpatterns = [
     path('update_employee/<int:id>', view.update_employee, name = 'Change existing employee'),
     path('delete_employee/<int:id>', view.delete_employee, name = 'Delete employee'),
     #order, Rent, Delete Booking, Return car paths
-    path('order_car/<int:id>/<int:vin>', view.order_car, name= 'Order car'),
+    path('order_car/<int:id>/<int:vin>', view.order_car, name = 'Order car'),
+    path('cancel_order_car/<int:id>/<int:vin>', view.cancel_order_car, name = 'Cancel order car'),
+    path('rent_car/<int:id>/<int:vin>', view.rent_car, name = 'Rent car'),
+    path('return_car/<int:id>/<int:vin>', view.return_car, name = 'Return car')
 
     ]
 
