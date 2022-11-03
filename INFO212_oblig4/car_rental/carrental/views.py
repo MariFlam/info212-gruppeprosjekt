@@ -1,3 +1,4 @@
+from http.client import OK
 from django.shortcuts import render
 from django.http import HttpResponse
 from carrental.models import Car, Employee, Customer
@@ -176,9 +177,7 @@ def order_car(request, id, vin):
     try:
         theCustomer = Customer.objects.get(cus_id = id)
         theCar = Car.objects.get(car_vin = vin)
-    except Customer.DoesNotExist:
-        return Response(status = status.HTTP_404_NOT_FOUND)
-    except Car.DoesNotExist:
+    except Customer.DoesNotExist or Car.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
 
     if theCustomer.booked_car == 0 and theCar.car_status == 'available':
@@ -197,12 +196,10 @@ def cancel_order_car(request, id, vin):
     try:
         theCustomer = Customer.objects.get(cus_id=id)
         theCar = Car.objects.get(car_vin=vin)
-    except Customer.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    except Car.DoesNotExist:
+    except Customer.DoesNotExist or Car.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if theCustomer.booked_car == 1 and theCar.car_status == "booked":
+    if theCustomer.booked_car == vin and theCar.car_status == "booked":
         theCar.car_status = "available"
         theCustomer.booked_car = 0
 
@@ -221,14 +218,13 @@ def rent_car(request, id, vin):
     try:
         theCustomer = Customer.objects.get(cus_id=id)
         theCar = Car.objects.get(car_vin=vin)
-    except Customer.DoesNotExist:
+    except Customer.DoesNotExist or Car.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    except Car.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    
 
-    if theCustomer.booked_car == 1 and theCar.car_status == "booked":
+    if theCustomer.booked_car == vin and theCar.car_status == "booked":
         theCar.car_status = "rented"
-        theCustomer.rented_car = 1
+        theCustomer.rented_car = vin
         theCustomer.booked_car = 0
 
     serializer = CustomerSerializer(theCustomer, data=request.data)
@@ -242,18 +238,24 @@ def rent_car(request, id, vin):
 
 
 @api_view(['PUT'])
-def return_car(request, id, vin):
+def return_car(request, id, vin, state):
     try:
         theCustomer = Customer.objects.get(cus_id=id)
         theCar = Car.objects.get(car_vin=vin)
-    except Customer.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    except Car.DoesNotExist:
+    except Customer.DoesNotExist or Car.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if theCustomer.rented_car == 1 and theCostumer.car_status == "rented":
+    if theCustomer.rented_car == vin and theCar.car_status == "rented" and state == "ok":
         theCar.car_status = "available"
         theCustomer.rented_car = 0
+
+    elif theCustomer.rented_car == vin and theCar.car_status == "rented" and state == "damaged":
+        theCar.car_status = "damaged"
+        theCustomer.rented_car = 0
+
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+        
 
     serializer = CustomerSerializer(theCustomer, data=request.data)
     car_serializer = CarSerializer(theCar, data=request.data)
