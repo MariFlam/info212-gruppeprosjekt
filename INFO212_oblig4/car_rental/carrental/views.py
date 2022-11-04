@@ -8,20 +8,11 @@ from .serializers import CarSerializer, EmployeeSerializer, CustomerSerializer
 from rest_framework import status
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
+#something about querysets
+
 
 ####################################################
-# Car
-
-# An index with a list of the cars in the database
-"""def index(request):
-    car = Car.objects.all()
-    context = {
-        'car_make':car,
-        'car_model':car,
-        'cars':car,
-    }
-    return render(request, 'index.html', context)"""
-
+# Car views
 
 # getting a list of the cars
 @api_view(['GET'])
@@ -64,9 +55,8 @@ def delete_car(request, vin):
     theCar.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
 
-
 ###############################################################
-# Employee
+# Employee views
 
 # getting a list of the employees
 @api_view(['GET'])
@@ -110,15 +100,14 @@ def delete_employee(request, id):
     return Response(status=status.HTTP_202_ACCEPTED)
 
 
-
 ################################################################
-# Customer
+# Customer views 
+
 # getting a list of all the customers
 @api_view(['GET'])
 def get_customers(request):
     customers = Customer.objects.all()
     serializer = CustomerSerializer(customers, many=True)
-    print(serializer.data)
     return Response(serializer.data, status = status.HTTP_200_OK)
 
 #posting a new customer
@@ -158,19 +147,7 @@ def delete_customer(request, id):
 ################################################################
 # Book, Rent, Delete Booking and Return car
 
-# Book car: paramters: vin and customer id. If the customer does not have a booking and the car is available, car marked as booked
-
-# Rent car: parameters: vin and customer id. If the customer has a booking for this car, the car status changes to rented and the customer can not rent any more cars (we need afield for this?)
-
-# Delete booking: parameters: vin and customer id. If the customer has a booking for that car, then the car is marked as available.
-
-# Return car: parameters: vin, customer id, car state as string ("ok", "damaged"). If the customer has rented that car and the car is "ok", the car is marked as available and the customer has no rentals registrered to them. If the customer has rented that car and the state is "damaged", then the car status is changed to damaged and the customerhas no rentals registrered to them
-
-
 #https://www.django-rest-framework.org/tutorial/quickstart/
-
-
-#https://www.geeksforgeeks.org/django-rest-api-crud-with-drf/
 
 @api_view(['PUT'])
 def order_car(request, id, vin):
@@ -186,29 +163,27 @@ def order_car(request, id, vin):
 
         theCustomer.save()
         theCar.save()
-        return Response(status = status.HTTP_200_OK)
+        return Response("car booked", status = status.HTTP_200_OK)
 
     return Response(status = status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PUT'])
-def cancel_order_car(request, id, vin):
+def cancel_order(request, id, vin):
     try:
         theCustomer = Customer.objects.get(cus_id=id)
         theCar = Car.objects.get(car_vin=vin)
     except Customer.DoesNotExist or Car.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    print(theCustomer.booked_car, ' ', vin, theCar.car_status)
 
     if theCustomer.booked_car == vin and theCar.car_status == "booked":
         theCar.car_status = "available"
         theCustomer.booked_car = 0
 
-    serializer = CustomerSerializer(theCustomer, data=request.data)
-    car_serializer = CarSerializer(theCar, data=request.data)
-    if serializer.is_valid() and car_serializer.is_valid():
-        serializer.save()
-        car_serializer.save()
-        return Response(serializer.data, car_serializer.data)
+        theCar.save()
+        theCustomer.save()
+        return Response("order deleted", status = status.HTTP_202_ACCEPTED)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -227,14 +202,11 @@ def rent_car(request, id, vin):
         theCustomer.rented_car = vin
         theCustomer.booked_car = 0
 
-    serializer = CustomerSerializer(theCustomer, data=request.data)
-    car_serializer = CarSerializer(theCar, data=request.data)
-    if serializer.is_valid() and car_serializer.is_valid():
-        serializer.save()
-        car_serializer.save()
-        return Response(serializer.data, car_serializer.data)
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        theCar.save()
+        theCustomer.save()
+        return Response("car rented", status = status.HTTP_202_ACCEPTED)
+    else: 
+        return Response("this car is not booked by this customer", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PUT'])
@@ -242,26 +214,25 @@ def return_car(request, id, vin, state):
     try:
         theCustomer = Customer.objects.get(cus_id=id)
         theCar = Car.objects.get(car_vin=vin)
+
     except Customer.DoesNotExist or Car.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if theCustomer.rented_car == vin and theCar.car_status == "rented" and state == "ok":
         theCar.car_status = "available"
         theCustomer.rented_car = 0
+        theCar.save()
+        theCustomer.save()
+
+        return Response("car returned in good condition", status = status.HTTP_202_ACCEPTED)
 
     elif theCustomer.rented_car == vin and theCar.car_status == "rented" and state == "damaged":
         theCar.car_status = "damaged"
         theCustomer.rented_car = 0
+        theCar.save()
+        theCustomer.save()
 
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+        return Response("car returned in damaged condition", status = status.HTTP_202_ACCEPTED)
 
-    serializer = CustomerSerializer(theCustomer, data=request.data)
-    car_serializer = CarSerializer(theCar, data=request.data)
-    if serializer.is_valid() and car_serializer.is_valid():
-        serializer.save()
-        car_serializer.save()
-        return Response(serializer.data, car_serializer.data)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)

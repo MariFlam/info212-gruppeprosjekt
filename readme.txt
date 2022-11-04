@@ -3,12 +3,25 @@ Folders:
   - site: car_rental
   - App: carrental
 
+Github: https://github.com/MariFlam/info212-gruppeprosjekt
+
+DB superuser: 
+  - username: admin
+  - pwd: teatime_doubly_so
+
+Postman Cluster: https://app.getpostman.com/join-team?invite_code=5dee978ddd33fdfdb273404405f4e569&target_code=14e3ff59731237dc2d29e3f3ac1efa6a
+
 Pipenv: 
-en litt simplere verson av virtual environment.
+Install (make sure you are in the main folder): 
+pipenv install
 
-Installer: pipenv install
-
-Kjør: 
+run: 
 pipenv shell
 
-Dette åpner en ny terminal der vi kjører programmet gjennom. 
+Packages we installed: 
+- Django
+- Django rest framework
+- Django import/export (for easier db management. It allows you to upload JSON or csv files to populate the database. The files we used were cars.json and Customer.json)
+
+We used the examples from lecture 8 as a starting point for how to build the apis and set up the models, urls and serializers. Some of the structure and the names of some of the variables were kept becuase they made sense to us. 
+We used the documentation: https://docs.djangoproject.com/en/4.1/ as an additional reference. See notes in comments.  
