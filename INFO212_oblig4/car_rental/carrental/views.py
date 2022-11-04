@@ -8,8 +8,8 @@ from .serializers import CarSerializer, EmployeeSerializer, CustomerSerializer
 from rest_framework import status
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-#something about querysets
 
+#Based on lecture 8 car api examples
 
 ####################################################
 # Car views
@@ -63,7 +63,6 @@ def delete_car(request, vin):
 def get_employees(request):
     employees = Employee.objects.all()
     serializer = EmployeeSerializer(employees, many=True)
-    print(serializer.data)
     return Response(serializer.data, status = status.HTTP_200_OK)
 
 #posting a new employee
@@ -124,11 +123,11 @@ def update_customer(request, id):
     try:
         theCustomer = Customer.objects.get(cus_id = id)
     except Customer.DoesNotExists:
-        return Response(status = status.HTTP_404_NOT_FOUND)
+        return Response('customer not found', status = status.HTTP_404_NOT_FOUND)
     serializer = CustomerSerializer(theCustomer, data = request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status = status.HTTP_202_ACCEPTED)
     else: 
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
@@ -139,15 +138,16 @@ def delete_customer(request, id):
     try:
         theCustomer = Customer.objects.get(cus_id = id)
     except Customer.DoesNotExist:
-        return Response(status = status.HTTP_404_NOT_FOUND)
+        return Response('customer not found', status = status.HTTP_404_NOT_FOUND)
     theCustomer.delete()
-    return Response(status=status.HTTP_202_ACCEPTED)
+    return Response('customer deleted', status=status.HTTP_202_ACCEPTED)
 
 
 ################################################################
 # Book, Rent, Delete Booking and Return car
 
-#https://www.django-rest-framework.org/tutorial/quickstart/
+# A customer is linked to an order/booking for a particular car 
+# We chose to implement this as a variable booked_car on the customer object that is updated with the vin number of the ordered car.
 
 @api_view(['PUT'])
 def order_car(request, id, vin):
@@ -155,19 +155,19 @@ def order_car(request, id, vin):
         theCustomer = Customer.objects.get(cus_id = id)
         theCar = Car.objects.get(car_vin = vin)
     except Customer.DoesNotExist or Car.DoesNotExist:
-        return Response(status = status.HTTP_404_NOT_FOUND)
+        return Response('car or customer does not exist', status = status.HTTP_404_NOT_FOUND)
 
     if theCustomer.booked_car == 0 and theCar.car_status == 'available':
         theCustomer.booked_car = vin
-        theCar.car_status = "booked"
+        theCar.car_status = 'booked'
 
         theCustomer.save()
         theCar.save()
-        return Response("car booked", status = status.HTTP_200_OK)
+        return Response('car booked', status = status.HTTP_200_OK)
 
     return Response(status = status.HTTP_400_BAD_REQUEST)
 
-
+# canceling an order/booking that a customer has made for a particular car
 @api_view(['PUT'])
 def cancel_order(request, id, vin):
     try:
@@ -177,17 +177,18 @@ def cancel_order(request, id, vin):
         return Response(status=status.HTTP_404_NOT_FOUND)
     print(theCustomer.booked_car, ' ', vin, theCar.car_status)
 
-    if theCustomer.booked_car == vin and theCar.car_status == "booked":
-        theCar.car_status = "available"
+    if theCustomer.booked_car == vin and theCar.car_status == 'booked':
+        theCar.car_status = 'available'
         theCustomer.booked_car = 0
 
         theCar.save()
         theCustomer.save()
-        return Response("order deleted", status = status.HTTP_202_ACCEPTED)
+        return Response('order deleted', status = status.HTTP_202_ACCEPTED)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
+# Renting a particular car a customer has ordered/booked
+# We chose to implement this as a variable rented_car on the customer object that is updated with the vin number of the ordered car.
 @api_view(['PUT'])
 def rent_car(request, id, vin):
     try:
@@ -197,18 +198,20 @@ def rent_car(request, id, vin):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 
-    if theCustomer.booked_car == vin and theCar.car_status == "booked":
-        theCar.car_status = "rented"
+    if theCustomer.booked_car == vin and theCar.car_status == 'booked':
+        theCar.car_status = 'rented'
         theCustomer.rented_car = vin
         theCustomer.booked_car = 0
 
         theCar.save()
         theCustomer.save()
-        return Response("car rented", status = status.HTTP_202_ACCEPTED)
+        return Response('car rented', status = status.HTTP_202_ACCEPTED)
     else: 
-        return Response("this car is not booked by this customer", status=status.HTTP_400_BAD_REQUEST)
+        return Response('this car is not booked by this customer', status=status.HTTP_400_BAD_REQUEST)
 
 
+# Returns a car a customer has rented and sets a status for it based on 
+# the state of the car upon return
 @api_view(['PUT'])
 def return_car(request, id, vin, state):
     try:
@@ -218,21 +221,23 @@ def return_car(request, id, vin, state):
     except Customer.DoesNotExist or Car.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if theCustomer.rented_car == vin and theCar.car_status == "rented" and state == "ok":
-        theCar.car_status = "available"
+    # If the car is not damaged upon return it is made availale for new orders
+    if theCustomer.rented_car == vin and theCar.car_status == 'rented' and state == 'ok':
+        theCar.car_status = 'available'
         theCustomer.rented_car = 0
         theCar.save()
         theCustomer.save()
 
-        return Response("car returned in good condition", status = status.HTTP_202_ACCEPTED)
-
-    elif theCustomer.rented_car == vin and theCar.car_status == "rented" and state == "damaged":
-        theCar.car_status = "damaged"
+        return Response('car returned in good condition', status = status.HTTP_202_ACCEPTED)
+    
+    # If the car is damaged upon return it is made unavailable for new orders.
+    elif theCustomer.rented_car == vin and theCar.car_status == 'rented' and state == 'damaged':
+        theCar.car_status = 'damaged'
         theCustomer.rented_car = 0
         theCar.save()
         theCustomer.save()
 
-        return Response("car returned in damaged condition", status = status.HTTP_202_ACCEPTED)
+        return Response('car returned in damaged condition', status = status.HTTP_202_ACCEPTED)
 
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -1,5 +1,4 @@
 """car_rental URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
 """
@@ -27,7 +26,7 @@ urlpatterns = [
     path('update_employee/<int:id>', view.update_employee, name = 'Change existing employee'),
     path('delete_employee/<int:id>', view.delete_employee, name = 'Delete employee'),
 
-    #order, Rent, Delete Booking, Return car paths
+    #Order, Rent, Cancel order and Return car paths
     path('order_car/<int:id>/<int:vin>', view.order_car, name = 'Order car'),
     path('cancel_order/<int:id>/<int:vin>', view.cancel_order, name = 'Cancel order'),
     path('rent_car/<int:id>/<int:vin>', view.rent_car, name = 'Rent car'),

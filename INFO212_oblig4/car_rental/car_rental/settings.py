@@ -46,7 +46,7 @@ INSTALLED_APPS = [
 ]
 
 # added to be able to add json objects into the database: 
-# https://django-import-export.readthedocs.io/en/latest/
+# https://django-import-export.readthedocs.io/en/latest/installation.html
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -24,4 +24,4 @@ Packages we installed:
 - Django import/export (for easier db management. It allows you to upload JSON or csv files to populate the database. The files we used were cars.json and Customer.json)
 
 We used the examples from lecture 8 as a starting point for how to build the apis and set up the models, urls and serializers. Some of the structure and the names of some of the variables were kept becuase they made sense to us. 
-We used the documentation: https://docs.djangoproject.com/en/4.1/ as an additional reference. See notes in comments.  
+We used the documentation for django, django import/export and django rest framwork as additional references. See notes in comments.  
