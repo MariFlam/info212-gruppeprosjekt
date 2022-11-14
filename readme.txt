@@ -5,6 +5,8 @@ Folders:
 
 Github: https://github.com/MariFlam/info212-gruppeprosjekt
 
+Dockerhub: https://hub.docker.com/r/mfl049/django-docker
+
 DB superuser: 
   - username: admin
   - pwd: teatime_doubly_so
