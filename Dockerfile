@@ -2,7 +2,7 @@ FROM python:3.11-rc-bullseye
 
 ENV PYTHONBUFFERED 1
 
-WORKDIR /INFO212_oblig4/car_rental
+WORKDIR /app
 
 COPY requirements.txt requirements.txt
 
