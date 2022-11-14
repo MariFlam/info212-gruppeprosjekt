@@ -2,7 +2,7 @@ FROM python:3.11-rc-bullseye
 
 ENV PYTHONBUFFERED 1
 
-WORKDIR /app
+WORKDIR /carrental .
 
 COPY requirements.txt requirements.txt
 
@@ -12,6 +12,6 @@ COPY . .
 
 EXPOSE 8000
 
-RUN python3 manage.py makemigrations app/car_rental/carrental
+RUN python3 manage.py makemigrations carrental
 RUN python3 manage.py migrate
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
