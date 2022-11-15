@@ -30,7 +30,7 @@ def save_car(request):
         serializer.save()
         return Response(serializer.data, status = status.HTTP_201_CREATED)
 
-#changes an exisitng car based on vin number
+#changes an existing car based on vin number
 @api_view(['PUT'])
 def update_car(request, vin):
     try:
@@ -73,7 +73,7 @@ def save_employee(request):
         serializer.save()
         return Response(serializer.data, status = status.HTTP_201_CREATED)
 
-#changes an exisitng emplyee based on emplyee id
+#changes an existing employee based on employee id
 @api_view(['PUT'])
 def update_employee(request, id):
     try:
@@ -117,7 +117,7 @@ def save_customer(request):
         serializer.save()
         return Response(serializer.data, status = status.HTTP_201_CREATED)
 
-#changes an exisitng customer based on id
+#changes an existing customer based on id
 @api_view(['PUT'])
 def update_customer(request, id):
     try:
@@ -221,7 +221,7 @@ def return_car(request, id, vin, state):
     except Customer.DoesNotExist or Car.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    # If the car is not damaged upon return it is made availale for new orders
+    # If the car is not damaged upon return it is made available for new orders
     if theCustomer.rented_car == vin and theCar.car_status == 'rented' and state == 'ok':
         theCar.car_status = 'available'
         theCustomer.rented_car = 0
