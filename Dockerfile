@@ -8,7 +8,7 @@ COPY ../requirements.txt requirements.txt
 
 RUN pip3 install -r requirements.txt
 
-COPY  /app/car_rental .  
+COPY  /app .  
 
 RUN python3 manage.py makemigrations
 RUN python3 manage.py migrate
